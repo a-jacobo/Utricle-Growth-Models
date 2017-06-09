@@ -1,0 +1,10 @@
+<Simulation version="3.5.1">
+   <XMLScript Type="XMLScript">Simulation/steppableBasedMitosis.xml</XMLScript>
+   <PythonScript Type="PythonScript">Simulation/steppableBasedMitosis.py</PythonScript>
+   <PIFFile Type="PIFFile">Simulation/steppableBasedMitosis.piff</PIFFile>
+   <Resource Type="PIFFile">Simulation/circle.piff</Resource>
+   <Resource Type="Python">Simulation/ContactSteeringSteppable.py</Resource>
+   <Resource Type="Python">Simulation/DeltaNotchSteppables.py</Resource>
+   <Resource Type="Python">Simulation/steppableBasedMitosisSteppables.py</Resource>
+   <Resource Type="SBML">Simulation/DN_Collier.sbml</Resource>
+</Simulation>

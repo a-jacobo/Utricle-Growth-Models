@@ -1,0 +1,101 @@
+    <CompuCell3D>
+ <Potts>
+   <Dimensions x="600" y="600" z="1"/>
+   <LatticeType>Hexagonal</LatticeType>
+   <Anneal>10</Anneal>
+   <Steps>4500</Steps>
+   <Temperature>5</Temperature>
+   <Flip2DimRatio>1</Flip2DimRatio>
+   <NeighborOrder>5</NeighborOrder>
+ </Potts>
+
+ <Plugin Name="Volume"/>
+
+ <Plugin Name="Surface">
+   <TargetSurface>25</TargetSurface>
+   <LambdaSurface>1.5</LambdaSurface>
+ </Plugin>
+
+<Plugin Name="CellType">  
+   <!-- Listing all cell types in the simulation -->
+   <CellType TypeId="0" TypeName="Medium"/>
+   <CellType TypeId="1" TypeName="SupportingCell"/>
+   <CellType TypeId="2" TypeName="HairCell"/>
+</Plugin>
+
+<Plugin Name="Contact">
+   <!-- Specification of adhesion energies -->
+   <Energy Type1="Medium" Type2="Medium">0.0</Energy>
+   <Energy Type1="Medium" Type2="SupportingCell">20.0</Energy>
+   <Energy Type1="Medium" Type2="HairCell">20.0</Energy>
+   <Energy Type1="SupportingCell" Type2="SupportingCell">20.0</Energy>
+   <Energy Type1="SupportingCell" Type2="HairCell">20.0</Energy>
+   <Energy Type1="HairCell" Type2="HairCell">20.0</Energy>
+   <NeighborOrder>2</NeighborOrder>
+</Plugin>
+
+ <Plugin Name="NeighborTracker"> 
+   <!-- Module tracking neighboring cells of each cell -->
+</Plugin>
+
+<Plugin Name="CenterOfMass">
+    <!-- Module tracking center of mass of each cell -->
+</Plugin>
+
+<Steppable Type="DiffusionSolverFE">
+    <!-- Specification of PDE solvers -->
+    <DiffusionField Name="GROWTH_REPRESSOR">
+        <DiffusionData>
+            <FieldName>Growth Repressor</FieldName>
+            <GlobalDiffusionConstant>5.</GlobalDiffusionConstant>
+            <GlobalDecayConstant>0e-04</GlobalDecayConstant>
+        </DiffusionData>
+        <SecretionData>
+            <!-- When secretion is defined inside DissufionSolverFEall secretio nconstants are scaled automaticly to account for extra calls of the solver when handling large diffusion constants -->
+            <!-- Uniform secretion Definition -->
+            <Secretion Type="SupportingCell">2e-4</Secretion>
+            <Secretion Type="HairCell">2e-4</Secretion>
+        </SecretionData>
+        <BoundaryConditions>
+            <Plane Axis="X">
+                <ConstantDerivative PlanePosition="Min" Value="0.0"/>
+                <ConstantDerivative PlanePosition="Max" Value="0.0"/>
+            </Plane>
+            <Plane Axis="Y">
+                <ConstantDerivative PlanePosition="Min" Value="0.0"/>
+                <ConstantDerivative PlanePosition="Max" Value="0.0"/>
+            </Plane>
+        </BoundaryConditions>
+    </DiffusionField>
+</Steppable>
+
+
+<Steppable Type="BoxWatcher">  
+   <!-- Module tracing boundaries of the minimal box enclosing all the cells. May speed up calculations. May have no effect for parallel version -->
+   <XMargin>10</XMargin>
+   <YMargin>10</YMargin>
+   <ZMargin>10</ZMargin>
+</Steppable>
+
+<!--  <Steppable Type="PIFInitializer"> -->
+<!--    <PIFName>Simulation/steppableBasedMitosis.piff</PIFName> -->
+<!--    <PIFName>Simulation/circle.piff</PIFName> -->
+<!--  </Steppable> -->
+
+<Steppable Type="BlobInitializer">
+    <!-- Initial layout of cells in the form of spherical (circular in 2D) blob -->
+    <Region>
+        <Center x="300" y="300" z="0"/>
+        <Radius>50</Radius>
+        <Gap>0</Gap>
+        <Width>6</Width>
+        <Types>SupportingCell</Types>
+    </Region>
+</Steppable>
+
+<Metadata>
+   <NumberOfProcessors>4</NumberOfProcessors>
+</Metadata>
+
+</CompuCell3D>
+
